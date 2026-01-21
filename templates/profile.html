@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                {% if user %}
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">
+                            <i class="bi bi-person-circle me-2"></i>User Profile
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="col-md-4 text-center mb-4 mb-md-0">
+                                <div class="avatar-placeholder bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
+                                    <i class="bi bi-person fs-1 text-primary"></i>
+                                </div>
+                                <h5 class="mt-3 mb-0">{{ user.name }}</h5>
+                                <span class="badge bg-{{ 'danger' if user.role == 'Administrator' else 'secondary' }} mt-2">
+                                    {{ user.role }}
+                                </span>
+                            </div>
+                            <div class="col-md-8">
+                                <h5 class="border-bottom pb-2 mb-3">Account Information</h5>
+
+                                <div class="mb-3">
+                                    <label class="text-muted small">User ID</label>
+                                    <p class="mb-0 fw-bold">{{ user_id }}</p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="text-muted small">Full Name</label>
+                                    <p class="mb-0 fw-bold">{{ user.name }}</p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="text-muted small">Email Address</label>
+                                    <p class="mb-0 fw-bold">{{ user.email }}</p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="text-muted small">Role</label>
+                                    <p class="mb-0 fw-bold">{{ user.role }}</p>
+                                </div>
+
+                                {% if user.role == 'Administrator' %}
+                                <div class="alert alert-success mt-4">
+                                    <h5 class="alert-heading"><i class="bi bi-trophy me-2"></i>Congratulations!</h5>
+                                    <p class="mb-0">Admin Secret: <code class="fs-5">{{ user.secret }}</code></p>
+                                </div>
+                                {% else %}
+                                <div class="alert alert-info mt-4">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    {{ user.secret }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-light">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <h5 class="mb-0">12</h5>
+                                <small class="text-muted">Orders</small>
+                            </div>
+                            <div class="col-4">
+                                <h5 class="mb-0">$1,240</h5>
+                                <small class="text-muted">Spent</small>
+                            </div>
+                            <div class="col-4">
+                                <h5 class="mb-0">Gold</h5>
+                                <small class="text-muted">Member</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hint Section -->
+                <div class="card mt-4 shadow-sm border-0 bg-light">
+                    <div class="card-body">
+                        <h6 class="text-muted mb-2"><i class="bi bi-info-circle me-2"></i>Profile Navigation</h6>
+                        <p class="small text-muted mb-0">
+                            You are currently viewing profile ID: <strong>{{ user_id }}</strong>.
+                            Use the <code>id</code> parameter in the URL to view different profiles.
+                            Example: <code>/profile?id=101</code>
+                        </p>
+                    </div>
+                </div>
+
+                {% else %}
+                <!-- User Not Found -->
+                <div class="card shadow-sm border-0 border-warning">
+                    <div class="card-header bg-warning text-dark">
+                        <h4 class="mb-0">
+                            <i class="bi bi-exclamation-triangle me-2"></i>User Not Found
+                        </h4>
+                    </div>
+                    <div class="card-body p-5 text-center">
+                        <i class="bi bi-person-x fs-1 text-warning"></i>
+                        <h4 class="mt-3">Profile Not Found</h4>
+                        <p class="text-muted">No user found with ID: <strong>{{ user_id }}</strong></p>
+                        <p class="text-muted small">Valid user IDs range from 101 to 105.</p>
+                        <a href="{{ url_for('profile') }}" class="btn btn-primary">
+                            <i class="bi bi-arrow-left me-2"></i>Go to Default Profile
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Shop{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="display-5 mb-2">Our Collection</h1>
+                <p class="text-muted">Discover the perfect arrangement for every occasion</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Grid -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card product-card h-100 border-0 shadow-sm">
+                    <div class="product-image-wrapper">
+                        <img src="{{ product.image }}" class="card-img-top" alt="{{ product.name }}">
+                        <div class="product-overlay">
+                            <span class="badge bg-primary">Premium</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="text-muted small">{{ product.description }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-primary fw-bold fs-5">${{ "%.2f"|format(product.price) }}</span>
+                            <div class="rating">
+                                <i class="bi bi-star-fill text-warning small"></i>
+                                <i class="bi bi-star-fill text-warning small"></i>
+                                <i class="bi bi-star-fill text-warning small"></i>
+                                <i class="bi bi-star-fill text-warning small"></i>
+                                <i class="bi bi-star-half text-warning small"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-0 pt-0">
+                        <!-- VULNERABLE: Price is sent from client-side readonly input -->
+                        <form action="{{ url_for('buy') }}" method="POST">
+                            <input type="hidden" name="product_name" value="{{ product.name }}">
+                            <!-- The price is in a readonly input - can be modified via browser dev tools -->
+                            <input type="text" name="price" value="{{ product.price }}" readonly class="form-control form-control-sm mb-2 text-center bg-light" style="display: none;">
+                            <input type="hidden" name="price" value="{{ product.price }}">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Shop Features -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-md-3">
+                <i class="bi bi-shield-check fs-1 text-primary mb-3"></i>
+                <h6>Secure Payment</h6>
+                <p class="text-muted small mb-0">100% secure checkout</p>
+            </div>
+            <div class="col-md-3">
+                <i class="bi bi-arrow-counterclockwise fs-1 text-primary mb-3"></i>
+                <h6>Easy Returns</h6>
+                <p class="text-muted small mb-0">30-day satisfaction guarantee</p>
+            </div>
+            <div class="col-md-3">
+                <i class="bi bi-headset fs-1 text-primary mb-3"></i>
+                <h6>24/7 Support</h6>
+                <p class="text-muted small mb-0">Dedicated customer service</p>
+            </div>
+            <div class="col-md-3">
+                <i class="bi bi-gift fs-1 text-primary mb-3"></i>
+                <h6>Gift Wrapping</h6>
+                <p class="text-muted small mb-0">Beautiful presentation</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

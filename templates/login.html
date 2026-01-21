@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <i class="bi bi-flower1 fs-1 text-primary"></i>
+                            <h3 class="mt-3">Welcome Back</h3>
+                            <p class="text-muted">Sign in to your LOCth Shop account</p>
+                        </div>
+
+                        <!-- VULNERABLE: Login form with disabled button (client-side only) -->
+                        <form action="{{ url_for('login') }}" method="POST" id="loginForm">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input type="text" class="form-control" id="username" name="username"
+                                           placeholder="Enter your username" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                    <input type="password" class="form-control" id="password" name="password"
+                                           placeholder="Enter your password" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="rememberMe">
+                                <label class="form-check-label" for="rememberMe">Remember me</label>
+                            </div>
+
+                            <div class="d-grid mb-3">
+                                <!--
+                                    VULNERABILITY: Button is disabled via HTML attribute only.
+                                    Users can bypass this by:
+                                    1. Using browser developer tools to remove 'disabled' attribute
+                                    2. Submitting the form via JavaScript console
+                                    3. Using curl/Postman to send POST request directly
+                                -->
+                                <button type="submit" class="btn btn-primary btn-lg" id="loginBtn" disabled>
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                                </button>
+                            </div>
+
+                            <div class="alert alert-warning small" role="alert">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                <strong>Notice:</strong> Login is temporarily disabled for maintenance.
+                                Please try again later.
+                            </div>
+                        </form>
+
+                        <hr class="my-4">
+
+                        <div class="text-center">
+                            <p class="text-muted small mb-2">Don't have an account?</p>
+                            <a href="#" class="btn btn-outline-primary btn-sm">Create Account</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// This JavaScript is just for show - the real vulnerability is the disabled attribute
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    var btn = document.getElementById('loginBtn');
+    if (btn.disabled) {
+        // This check can be bypassed
+        console.log('Login is disabled');
+    }
+});
+</script>
+{% endblock %}

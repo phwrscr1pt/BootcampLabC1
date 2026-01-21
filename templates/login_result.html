@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Login Result{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-5 text-center">
+                        {% if success %}
+                        <div class="mb-4">
+                            <i class="bi bi-check-circle fs-1 text-success"></i>
+                        </div>
+                        <h3 class="text-success mb-3">Login Successful!</h3>
+                        <p class="text-muted">Welcome back, <strong>{{ username }}</strong>!</p>
+
+                        {% if flag %}
+                        <div class="alert alert-success mt-4">
+                            <h5 class="alert-heading"><i class="bi bi-trophy me-2"></i>Congratulations!</h5>
+                            <p>You successfully bypassed the disabled button!</p>
+                            <p class="mb-0">Your flag is:</p>
+                            <code class="fs-4 d-block mt-2">{{ flag }}</code>
+                        </div>
+                        {% endif %}
+
+                        <hr class="my-4">
+
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('profile') }}" class="btn btn-primary">
+                                <i class="bi bi-person me-2"></i>View Profile
+                            </a>
+                            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-house me-2"></i>Back to Home
+                            </a>
+                        </div>
+                        {% else %}
+                        <div class="mb-4">
+                            <i class="bi bi-x-circle fs-1 text-danger"></i>
+                        </div>
+                        <h3 class="text-danger mb-3">Login Failed</h3>
+                        <p class="text-muted">{{ message }}</p>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <a href="{{ url_for('login') }}" class="btn btn-primary">
+                                <i class="bi bi-arrow-left me-2"></i>Try Again
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

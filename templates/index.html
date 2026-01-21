@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!-- Hero Carousel -->
+<section class="hero-carousel">
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+        </div>
+
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('{{ url_for('static', filename='images/flower_1.jpg') }}');">
+                    <div class="carousel-content">
+                        <h1 class="display-3 fw-bold text-white mb-4">Elegance in Every Petal</h1>
+                        <p class="lead text-white mb-4">Discover our exquisite collection of handcrafted floral arrangements</p>
+                        <a href="{{ url_for('shop') }}" class="btn btn-light btn-lg px-5">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('{{ url_for('static', filename='images/flower_4.jpg') }}');">
+                    <div class="carousel-content">
+                        <h1 class="display-3 fw-bold text-white mb-4">Say It With Flowers</h1>
+                        <p class="lead text-white mb-4">Perfect arrangements for weddings, anniversaries, and special moments</p>
+                        <a href="{{ url_for('shop') }}" class="btn btn-light btn-lg px-5">Explore Collection</a>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('{{ url_for('static', filename='images/flower_6.jpg') }}');">
+                    <div class="carousel-content">
+                        <h1 class="display-3 fw-bold text-white mb-4">Fresh Daily Deliveries</h1>
+                        <p class="lead text-white mb-4">Farm-fresh blooms delivered right to your doorstep</p>
+                        <a href="{{ url_for('shop') }}" class="btn btn-light btn-lg px-5">Order Today</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="bi bi-truck fs-1 text-primary"></i>
+                    </div>
+                    <h5>Same Day Delivery</h5>
+                    <p class="text-muted mb-0">Order before 2 PM for same-day delivery in metro areas</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="bi bi-flower2 fs-1 text-primary"></i>
+                    </div>
+                    <h5>Farm Fresh Flowers</h5>
+                    <p class="text-muted mb-0">Sourced directly from premium flower farms worldwide</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="bi bi-heart fs-1 text-primary"></i>
+                    </div>
+                    <h5>Handcrafted With Love</h5>
+                    <p class="text-muted mb-0">Each arrangement is designed by our expert florists</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <img src="{{ url_for('static', filename='images/flower_9.jpg') }}" alt="About LOCth Shop" class="img-fluid rounded shadow-lg">
+            </div>
+            <div class="col-lg-6">
+                <h6 class="text-primary text-uppercase mb-2">About Us</h6>
+                <h2 class="display-6 mb-4">The Art of Floral Design</h2>
+                <p class="text-muted mb-4">
+                    At LOCth Shop, we believe that flowers have the power to transform moments into memories.
+                    Our passionate team of florists brings decades of experience to every arrangement,
+                    ensuring that each bouquet tells a unique story.
+                </p>
+                <p class="text-muted mb-4">
+                    From intimate birthday celebrations to grand wedding ceremonies, we take pride in
+                    creating bespoke floral designs that capture the essence of your special occasions.
+                </p>
+                <a href="{{ url_for('shop') }}" class="btn btn-outline-primary">Discover Our Collection</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h6 class="text-primary text-uppercase">Featured</h6>
+            <h2 class="display-6">Bestselling Arrangements</h2>
+        </div>
+        <div class="row g-4">
+            {% for product in featured_products %}
+            <div class="col-md-4">
+                <div class="card product-card h-100 border-0 shadow-sm">
+                    <div class="product-image-wrapper">
+                        <img src="{{ product.image }}" class="card-img-top" alt="{{ product.name }}">
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="text-muted small">{{ product.description }}</p>
+                        <p class="text-primary fw-bold fs-5">${{ "%.2f"|format(product.price) }}</p>
+                        <a href="{{ url_for('shop') }}" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-5">
+            <a href="{{ url_for('shop') }}" class="btn btn-primary btn-lg px-5">View All Products</a>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h6 class="text-primary text-uppercase">Testimonials</h6>
+            <h2 class="display-6">What Our Customers Say</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="testimonial-card p-4 bg-white rounded shadow-sm h-100">
+                    <div class="mb-3">
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-warning"></i>
+                    </div>
+                    <p class="text-muted fst-italic">"The most beautiful roses I've ever received! The arrangement was stunning and lasted over two weeks. Highly recommend LOCth Shop!"</p>
+                    <p class="fw-bold mb-0">- Sarah Mitchell</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card p-4 bg-white rounded shadow-sm h-100">
+                    <div class="mb-3">
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-warning"></i>
+                    </div>
+                    <p class="text-muted fst-italic">"They handled my wedding flowers perfectly. Every centerpiece was a work of art. The team truly understands the importance of every detail."</p>
+                    <p class="fw-bold mb-0">- Emily Chen</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card p-4 bg-white rounded shadow-sm h-100">
+                    <div class="mb-3">
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-half text-warning"></i>
+                    </div>
+                    <p class="text-muted fst-italic">"Same-day delivery saved my anniversary! The bouquet arrived fresh and beautifully wrapped. My wife was absolutely thrilled."</p>
+                    <p class="fw-bold mb-0">- Michael Rodriguez</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h3 class="mb-3">Join Our Floral Family</h3>
+                <p class="mb-4">Subscribe to receive exclusive offers, seasonal arrangements, and floral care tips.</p>
+                <form class="row g-2 justify-content-center">
+                    <div class="col-md-6">
+                        <input type="email" class="form-control form-control-lg" placeholder="Enter your email">
+                    </div>
+                    <div class="col-md-auto">
+                        <button type="submit" class="btn btn-light btn-lg">Subscribe</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

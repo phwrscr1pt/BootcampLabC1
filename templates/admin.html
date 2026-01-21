@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                {% if access_granted %}
+                <!-- Access Granted View -->
+                <div class="card shadow-sm border-0 border-success">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0">
+                            <i class="bi bi-shield-check me-2"></i>Admin Access Granted
+                        </h4>
+                    </div>
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <i class="bi bi-unlock fs-1 text-success"></i>
+                            <h3 class="mt-3 text-success">Welcome, Administrator!</h3>
+                            <p class="text-muted">You have successfully accessed the admin panel.</p>
+                        </div>
+
+                        <div class="alert alert-success">
+                            <h5 class="alert-heading"><i class="bi bi-trophy me-2"></i>Congratulations!</h5>
+                            <p class="mb-0">Your flag is: <code class="fs-5">{{ flag }}</code></p>
+                        </div>
+
+                        <hr>
+
+                        <h5 class="mb-3">Admin Dashboard</h5>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-cart3 fs-3 text-primary"></i>
+                                        <h4 class="mt-2 mb-0">152</h4>
+                                        <small class="text-muted">Total Orders</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-people fs-3 text-success"></i>
+                                        <h4 class="mt-2 mb-0">89</h4>
+                                        <small class="text-muted">Customers</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-currency-dollar fs-3 text-warning"></i>
+                                        <h4 class="mt-2 mb-0">$12,450</h4>
+                                        <small class="text-muted">Revenue</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <!-- Access Denied View -->
+                <div class="card shadow-sm border-0 border-danger">
+                    <div class="card-header bg-danger text-white">
+                        <h4 class="mb-0">
+                            <i class="bi bi-shield-x me-2"></i>Access Denied
+                        </h4>
+                    </div>
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <i class="bi bi-lock fs-1 text-danger"></i>
+                            <h3 class="mt-3 text-danger">403 Forbidden</h3>
+                            <p class="text-muted">You do not have permission to access this page.</p>
+                        </div>
+
+                        <div class="alert alert-danger">
+                            <h5 class="alert-heading"><i class="bi bi-exclamation-triangle me-2"></i>Restricted Area</h5>
+                            <p>This admin panel is restricted to authorized devices only.</p>
+                            <hr>
+                            <p class="mb-0 small">
+                                <strong>Note:</strong> Admin access is only available from company-issued mobile devices.
+                                If you believe you should have access, please contact IT support.
+                            </p>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <a href="{{ url_for('index') }}" class="btn btn-outline-primary">
+                                <i class="bi bi-house me-2"></i>Return to Home
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

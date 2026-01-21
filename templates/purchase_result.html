@@ -1,54 +1,143 @@
 {% extends "base.html" %}
 
-{% block title %}Purchase Complete{% endblock %}
+{% block title %}{% if success %}Purchase Complete{% else %}Transaction Failed{% endif %}{% endblock %}
 
 {% block content %}
 <section class="py-5">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body p-5 text-center">
-                        {% if success %}
-                        <div class="mb-4">
-                            <i class="bi bi-check-circle fs-1 text-success"></i>
+            <div class="col-md-7">
+                {% if success %}
+                <!-- SUCCESS STATE -->
+                <div class="card shadow-sm border-0 border-success">
+                    <div class="card-header bg-success text-white text-center py-3">
+                        <i class="bi bi-check-circle fs-3 me-2"></i>
+                        <span class="fs-4 fw-bold">Transaction Successful</span>
+                    </div>
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <i class="bi bi-bag-check fs-1 text-success"></i>
+                            <h3 class="mt-3 text-success">{{ message }}</h3>
                         </div>
-                        <h3 class="text-success mb-3">Purchase Successful!</h3>
-                        <p class="text-muted">{{ message }}</p>
 
-                        {% if flag %}
-                        <div class="alert alert-success mt-4">
-                            <h5 class="alert-heading"><i class="bi bi-trophy me-2"></i>Congratulations!</h5>
-                            <p class="mb-0">You found a vulnerability! Your flag is:</p>
-                            <code class="fs-4 d-block mt-2">{{ flag }}</code>
+                        <!-- Transaction Details -->
+                        <div class="bg-light rounded p-4 mb-4">
+                            <h6 class="text-muted mb-3"><i class="bi bi-receipt me-2"></i>Transaction Details</h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <small class="text-muted">Product</small>
+                                    <p class="fw-bold mb-2">{{ product_name }}</p>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <small class="text-muted">Amount Paid</small>
+                                    <p class="fw-bold text-success mb-2">${{ "%.2f"|format(price) }}</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Previous Balance</span>
+                                <span>${{ "%.2f"|format(balance) }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Amount Deducted</span>
+                                <span class="text-danger">-${{ "%.2f"|format(price) }}</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between fw-bold">
+                                <span>New Balance</span>
+                                <span class="text-primary">${{ "%.2f"|format(balance - price) }}</span>
+                            </div>
+                        </div>
+
+                        {% if suspicious and flag %}
+                        <!-- SUSPICIOUS TRANSACTION - FLAG FOUND -->
+                        <div class="alert alert-warning border-warning">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="bi bi-exclamation-triangle-fill fs-4 text-warning me-2"></i>
+                                <h5 class="alert-heading mb-0">Alert: Suspicious Transaction Detected!</h5>
+                            </div>
+                            <hr>
+                            <p class="mb-2">
+                                <i class="bi bi-shield-exclamation me-2"></i>
+                                Our fraud detection system flagged this transaction as suspicious.
+                                The purchase price of <strong>${{ "%.2f"|format(price) }}</strong> appears to have been tampered with!
+                            </p>
+                            <div class="bg-dark text-light rounded p-3 mt-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-trophy-fill text-warning fs-4 me-3"></i>
+                                    <div>
+                                        <small class="text-muted">Congratulations! You found the vulnerability!</small>
+                                        <p class="mb-0 font-monospace fs-5">{{ flag }}</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         {% endif %}
 
-                        <hr class="my-4">
-
                         <div class="d-grid gap-2">
-                            <a href="{{ url_for('shop') }}" class="btn btn-primary">
+                            <a href="{{ url_for('shop') }}" class="btn btn-primary btn-lg">
                                 <i class="bi bi-cart me-2"></i>Continue Shopping
                             </a>
                             <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
                                 <i class="bi bi-house me-2"></i>Back to Home
                             </a>
                         </div>
-                        {% else %}
-                        <div class="mb-4">
-                            <i class="bi bi-x-circle fs-1 text-danger"></i>
-                        </div>
-                        <h3 class="text-danger mb-3">Purchase Failed</h3>
-                        <p class="text-muted">{{ message }}</p>
-
-                        <div class="d-grid gap-2 mt-4">
-                            <a href="{{ url_for('shop') }}" class="btn btn-primary">
-                                <i class="bi bi-arrow-left me-2"></i>Return to Shop
-                            </a>
-                        </div>
-                        {% endif %}
                     </div>
                 </div>
+
+                {% else %}
+                <!-- FAILURE STATE - Insufficient Funds -->
+                <div class="card shadow-sm border-0 border-danger">
+                    <div class="card-header bg-danger text-white text-center py-3">
+                        <i class="bi bi-x-circle fs-3 me-2"></i>
+                        <span class="fs-4 fw-bold">Transaction Failed</span>
+                    </div>
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <i class="bi bi-wallet-fill fs-1 text-danger"></i>
+                            <h3 class="mt-3 text-danger">{{ message }}</h3>
+                        </div>
+
+                        <!-- Error Details -->
+                        <div class="alert alert-danger">
+                            <h6 class="alert-heading">
+                                <i class="bi bi-exclamation-octagon me-2"></i>Insufficient Funds
+                            </h6>
+                            <hr>
+                            <div class="row">
+                                <div class="col-6">
+                                    <p class="mb-1"><strong>Product:</strong></p>
+                                    <p class="mb-1"><strong>Product Price:</strong></p>
+                                    <p class="mb-1"><strong>Your Balance:</strong></p>
+                                    <p class="mb-0"><strong>Shortfall:</strong></p>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <p class="mb-1">{{ product_name }}</p>
+                                    <p class="mb-1 text-danger">${{ "%.2f"|format(price) }}</p>
+                                    <p class="mb-1">${{ "%.2f"|format(balance) }}</p>
+                                    <p class="mb-0 text-danger fw-bold">-${{ "%.2f"|format(price - balance) }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-light rounded p-3 mb-4 text-center">
+                            <i class="bi bi-lightbulb text-warning me-2"></i>
+                            <small class="text-muted">
+                                You need <strong class="text-danger">${{ "%.2f"|format(price - balance) }}</strong> more to complete this purchase.
+                            </small>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('shop') }}" class="btn btn-primary btn-lg">
+                                <i class="bi bi-arrow-left me-2"></i>Return to Shop
+                            </a>
+                            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-house me-2"></i>Back to Home
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>

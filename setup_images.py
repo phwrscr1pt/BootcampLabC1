@@ -11,7 +11,7 @@ import time
 # Unsplash image URLs (high-quality flower images)
 FLOWER_IMAGES = [
     "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=800&q=80",  # Pink roses
-    "https://images.unsplash.com/photo-1518882605630-8eb favor-f172a30b5b87?w=800&q=80",  # White flowers
+    "https://images.unsplash.com/photo-1494972688394-4cc796f9e4c5?w=800&q=80",  # White flowers
     "https://images.unsplash.com/photo-1455659817273-f96807779a8a?w=800&q=80",  # Tulips
     "https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=800&q=80",  # Red roses
     "https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=800&q=80",  # Sunflowers
@@ -25,7 +25,7 @@ FLOWER_IMAGES = [
 # Backup URLs in case primary ones fail
 BACKUP_IMAGES = [
     "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=800&q=80",
-    "https://images.unsplash.com/photo-1518882605630-8eb1f1f1c7eb?w=800&q=80",
+    "https://images.unsplash.com/photo-1559563362-c667ba5f5480?w=800&q=80",  # White lilies
     "https://images.unsplash.com/photo-1455659817273-f96807779a8a?w=800&q=80",
     "https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=800&q=80",
     "https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=800&q=80",

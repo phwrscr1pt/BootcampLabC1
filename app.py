@@ -7,7 +7,7 @@ for educational purposes only. DO NOT deploy in production!
 """
 
 import time
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, make_response
 
 app = Flask(__name__)
 app.secret_key = 'locth-secret-key-2024'
@@ -386,6 +386,53 @@ def profile():
 
 
 # ============================================================
+# LAB 6: HTTP Method Discovery & Tampering
+# ============================================================
+# Mock news data for the API
+NEWS_DATA = [
+    {"id": 1, "title": "Welcome to LOCth Shop!", "content": "We're excited to launch our new floral boutique."},
+    {"id": 2, "title": "Spring Sale - 20% Off!", "content": "Enjoy discounts on all arrangements this season."},
+    {"id": 3, "title": "New Orchid Collection", "content": "Rare exotic orchids now available in store."},
+]
+
+
+@app.route('/api/news', methods=['GET', 'POST', 'DELETE', 'OPTIONS'])
+def api_news():
+    """
+    VULNERABLE: Hidden DELETE method accessible via HTTP method tampering.
+    Students must use OPTIONS to discover available methods, then use DELETE to get the flag.
+    """
+    if request.method == 'OPTIONS':
+        # The Recon Step: Reveal available methods in the Allow header
+        response = make_response('', 200)
+        response.headers['Allow'] = 'GET, POST, DELETE, OPTIONS'
+        response.headers['Content-Type'] = 'text/plain'
+        return response
+
+    elif request.method == 'GET':
+        # Normal operation: return news list
+        return jsonify({"status": "success", "news": NEWS_DATA})
+
+    elif request.method == 'POST':
+        # Decoy: appears to allow posting but fails
+        return jsonify({"status": "failed", "message": "Read-only mode. News posting is disabled."}), 403
+
+    elif request.method == 'DELETE':
+        # The Exploit Step: Hidden functionality reveals the flag
+        return jsonify({
+            "status": "success",
+            "message": "All news deleted successfully.",
+            "flag": "FLAG{HTTP_OPTIONS_METHOD_IS_USEFUL}"
+        })
+
+
+@app.route('/announcements')
+def announcements():
+    """Announcements page - hints at the /api/news endpoint."""
+    return render_template('announcements.html', news=NEWS_DATA)
+
+
+# ============================================================
 # ERROR HANDLERS
 # ============================================================
 
@@ -413,6 +460,7 @@ if __name__ == '__main__':
     print("  - Lab 3: User-Agent Spoofing (/admin)")
     print("  - Lab 4: Client-Side Bypass (/login)")
     print("  - Lab 5: IDOR (/profile?id=XXX)")
+    print("  - Lab 6: HTTP Method Tampering (/api/news)")
     print("=" * 60)
 
     app.run(host='0.0.0.0', port=5000, debug=True)

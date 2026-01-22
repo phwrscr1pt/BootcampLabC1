@@ -399,7 +399,7 @@ NEWS_DATA = [
 # LAB 7: HTTP Methods - Announcements API
 # ============================================================
 # In-memory announcements list
-announcements = [
+announcements_list = [
     {"id": 1, "title": "Store Hours Update", "content": "We are now open from 9 AM to 9 PM daily."},
     {"id": 2, "title": "Secret Admin Note", "content": "SECRET_FLAG{HTTP_DELETE_METHOD_DISCOVERED}"},
     {"id": 3, "title": "Holiday Specials", "content": "Check out our holiday flower arrangements!"},
@@ -437,14 +437,14 @@ def api_news():
 
 
 @app.route('/announcements', methods=['GET', 'POST'])
-def handle_announcements():
+def announcements():
     """
     LAB 7: Announcements endpoint with multiple HTTP methods.
     GET: Render announcements page.
     POST: Create a new announcement (VULNERABLE - no auth required).
     """
     if request.method == 'GET':
-        return render_template('announcements.html', news=announcements)
+        return render_template('announcements.html', news=announcements_list)
 
     elif request.method == 'POST':
         # Create new announcement from JSON data
@@ -453,13 +453,13 @@ def handle_announcements():
             return jsonify({"status": "error", "message": "No JSON data provided."}), 400
 
         # Auto-generate new ID
-        new_id = max((a['id'] for a in announcements), default=0) + 1
+        new_id = max((a['id'] for a in announcements_list), default=0) + 1
         new_announcement = {
             "id": new_id,
             "title": data.get('title', 'Untitled'),
             "content": data.get('content', '')
         }
-        announcements.append(new_announcement)
+        announcements_list.append(new_announcement)
 
         return jsonify({
             "status": "success",
@@ -479,7 +479,7 @@ def modify_announcement(announcement_id):
     """
     # Find the announcement
     announcement_index = None
-    for i, announcement in enumerate(announcements):
+    for i, announcement in enumerate(announcements_list):
         if announcement['id'] == announcement_id:
             announcement_index = i
             break
@@ -491,7 +491,7 @@ def modify_announcement(announcement_id):
         }), 404
 
     if request.method == 'DELETE':
-        deleted = announcements.pop(announcement_index)
+        deleted = announcements_list.pop(announcement_index)
         return jsonify({
             "status": "success",
             "message": f"Announcement '{deleted['title']}' deleted successfully.",
@@ -504,7 +504,7 @@ def modify_announcement(announcement_id):
         if not data:
             return jsonify({"status": "error", "message": "No JSON data provided."}), 400
 
-        announcements[announcement_index] = {
+        announcements_list[announcement_index] = {
             "id": announcement_id,
             "title": data.get('title', 'Untitled'),
             "content": data.get('content', '')
@@ -512,7 +512,7 @@ def modify_announcement(announcement_id):
         return jsonify({
             "status": "success",
             "message": "Announcement replaced successfully.",
-            "announcement": announcements[announcement_index]
+            "announcement": announcements_list[announcement_index]
         }), 200
 
     elif request.method == 'PATCH':
@@ -522,14 +522,14 @@ def modify_announcement(announcement_id):
             return jsonify({"status": "error", "message": "No JSON data provided."}), 400
 
         if 'title' in data:
-            announcements[announcement_index]['title'] = data['title']
+            announcements_list[announcement_index]['title'] = data['title']
         if 'content' in data:
-            announcements[announcement_index]['content'] = data['content']
+            announcements_list[announcement_index]['content'] = data['content']
 
         return jsonify({
             "status": "success",
             "message": "Announcement updated successfully.",
-            "announcement": announcements[announcement_index]
+            "announcement": announcements_list[announcement_index]
         }), 200
 
 

@@ -436,34 +436,101 @@ def api_news():
         })
 
 
-@app.route('/announcements', methods=['GET'])
-def get_announcements():
+@app.route('/announcements', methods=['GET', 'POST'])
+def handle_announcements():
     """
-    LAB 7: Returns all announcements as JSON.
-    One announcement contains a SECRET_FLAG that can be discovered.
+    LAB 7: Announcements endpoint with multiple HTTP methods.
+    GET: Render announcements page.
+    POST: Create a new announcement (VULNERABLE - no auth required).
     """
-    return jsonify(announcements)
+    if request.method == 'GET':
+        return render_template('announcements.html', news=announcements)
+
+    elif request.method == 'POST':
+        # Create new announcement from JSON data
+        data = request.get_json()
+        if not data:
+            return jsonify({"status": "error", "message": "No JSON data provided."}), 400
+
+        # Auto-generate new ID
+        new_id = max((a['id'] for a in announcements), default=0) + 1
+        new_announcement = {
+            "id": new_id,
+            "title": data.get('title', 'Untitled'),
+            "content": data.get('content', '')
+        }
+        announcements.append(new_announcement)
+
+        return jsonify({
+            "status": "success",
+            "message": "Announcement created successfully.",
+            "announcement": new_announcement
+        }), 201
 
 
-@app.route('/announcements/<int:announcement_id>', methods=['DELETE'])
-def delete_announcement(announcement_id):
+@app.route('/announcements/<int:announcement_id>', methods=['DELETE', 'PUT', 'PATCH'])
+def modify_announcement(announcement_id):
     """
-    LAB 7: Delete an announcement by ID.
-    VULNERABLE: No authentication required to delete announcements.
+    LAB 7: Modify an announcement by ID.
+    DELETE: Remove the announcement.
+    PUT: Completely replace the announcement.
+    PATCH: Partially update the announcement.
+    VULNERABLE: No authentication required for any operation.
     """
+    # Find the announcement
+    announcement_index = None
     for i, announcement in enumerate(announcements):
         if announcement['id'] == announcement_id:
-            deleted = announcements.pop(i)
-            return jsonify({
-                "status": "success",
-                "message": f"Announcement '{deleted['title']}' deleted successfully.",
-                "deleted": deleted
-            })
+            announcement_index = i
+            break
 
-    return jsonify({
-        "status": "error",
-        "message": f"Announcement with ID {announcement_id} not found."
-    }), 404
+    if announcement_index is None:
+        return jsonify({
+            "status": "error",
+            "message": f"Announcement with ID {announcement_id} not found."
+        }), 404
+
+    if request.method == 'DELETE':
+        deleted = announcements.pop(announcement_index)
+        return jsonify({
+            "status": "success",
+            "message": f"Announcement '{deleted['title']}' deleted successfully.",
+            "deleted": deleted
+        }), 200
+
+    elif request.method == 'PUT':
+        # Complete replacement
+        data = request.get_json()
+        if not data:
+            return jsonify({"status": "error", "message": "No JSON data provided."}), 400
+
+        announcements[announcement_index] = {
+            "id": announcement_id,
+            "title": data.get('title', 'Untitled'),
+            "content": data.get('content', '')
+        }
+        return jsonify({
+            "status": "success",
+            "message": "Announcement replaced successfully.",
+            "announcement": announcements[announcement_index]
+        }), 200
+
+    elif request.method == 'PATCH':
+        # Partial update
+        data = request.get_json()
+        if not data:
+            return jsonify({"status": "error", "message": "No JSON data provided."}), 400
+
+        if 'title' in data:
+            announcements[announcement_index]['title'] = data['title']
+        if 'content' in data:
+            announcements[announcement_index]['content'] = data['content']
+
+        return jsonify({
+            "status": "success",
+            "message": "Announcement updated successfully.",
+            "announcement": announcements[announcement_index]
+        }), 200
 
 
 # ============================================================

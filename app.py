@@ -401,7 +401,7 @@ NEWS_DATA = [
 # In-memory announcements list
 announcements_list = [
     {"id": 1, "title": "Store Hours Update", "content": "We are now open from 9 AM to 9 PM daily."},
-    {"id": 2, "title": "Secret Admin Note", "content": "SECRET_FLAG{HTTP_DELETE_METHOD_DISCOVERED}"},
+    {"id": 2, "title": "Secret Admin Note", "content": "GOOD LUCK KUB"},
     {"id": 3, "title": "Holiday Specials", "content": "Check out our holiday flower arrangements!"},
 ]
 

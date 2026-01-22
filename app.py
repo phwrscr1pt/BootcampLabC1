@@ -395,6 +395,16 @@ NEWS_DATA = [
     {"id": 3, "title": "New Orchid Collection", "content": "Rare exotic orchids now available in store."},
 ]
 
+# ============================================================
+# LAB 7: HTTP Methods - Announcements API
+# ============================================================
+# In-memory announcements list
+announcements = [
+    {"id": 1, "title": "Store Hours Update", "content": "We are now open from 9 AM to 9 PM daily."},
+    {"id": 2, "title": "Secret Admin Note", "content": "SECRET_FLAG{HTTP_DELETE_METHOD_DISCOVERED}"},
+    {"id": 3, "title": "Holiday Specials", "content": "Check out our holiday flower arrangements!"},
+]
+
 
 @app.route('/api/news', methods=['GET', 'POST', 'DELETE', 'OPTIONS'])
 def api_news():
@@ -426,10 +436,34 @@ def api_news():
         })
 
 
-@app.route('/announcements')
-def announcements():
-    """Announcements page - hints at the /api/news endpoint."""
-    return render_template('announcements.html', news=NEWS_DATA)
+@app.route('/announcements', methods=['GET'])
+def get_announcements():
+    """
+    LAB 7: Returns all announcements as JSON.
+    One announcement contains a SECRET_FLAG that can be discovered.
+    """
+    return jsonify(announcements)
+
+
+@app.route('/announcements/<int:announcement_id>', methods=['DELETE'])
+def delete_announcement(announcement_id):
+    """
+    LAB 7: Delete an announcement by ID.
+    VULNERABLE: No authentication required to delete announcements.
+    """
+    for i, announcement in enumerate(announcements):
+        if announcement['id'] == announcement_id:
+            deleted = announcements.pop(i)
+            return jsonify({
+                "status": "success",
+                "message": f"Announcement '{deleted['title']}' deleted successfully.",
+                "deleted": deleted
+            })
+
+    return jsonify({
+        "status": "error",
+        "message": f"Announcement with ID {announcement_id} not found."
+    }), 404
 
 
 # ============================================================
@@ -461,6 +495,7 @@ if __name__ == '__main__':
     print("  - Lab 4: Client-Side Bypass (/login)")
     print("  - Lab 5: IDOR (/profile?id=XXX)")
     print("  - Lab 6: HTTP Method Tampering (/api/news)")
+    print("  - Lab 7: HTTP Methods (/announcements)")
     print("=" * 60)
 
     app.run(host='0.0.0.0', port=5000, debug=True)
